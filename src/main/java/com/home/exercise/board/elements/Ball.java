@@ -25,8 +25,9 @@ public final class Ball {
    * Change the status of the ball to the nextStep
    * @param rows bound number of rows
    * @param cols bound number of columns
+   * @return true if the ball haven't hit any board limit
    */
-  public void advance(final int rows, final int cols) {
+  public boolean advance(final int rows, final int cols) {
     // We check the next row considering the bounds and the direction
     if(up) {
       int nextRow = row - 1;
@@ -76,6 +77,12 @@ public final class Ball {
       }
     }
     
+    // We check if the ball hit the left board limit
+    boolean hasNextMove = true;
+    if(col == 0) {
+      hasNextMove = false;
+    }
+    return hasNextMove;
   }
   
   // Getters and setters

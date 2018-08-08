@@ -25,7 +25,7 @@ public final class Board {
     this.rows = rows;
     this.cols = cols;
     this.velocity = velocity;
-    leftStick = new Stick(3, 0, 0);   // We are defining that leftStick has 2 spaces of size and it is un the first column
+    leftStick = new Stick(4, 1, 0);   // We are defining that leftStick has 2 spaces of size and it is un the first column
     ball = new Ball(2, 1, leftStick); // We can change later these values for random ones
     stop = true;
   }
@@ -43,10 +43,14 @@ public final class Board {
   private void initBallMovement() {
     stop = false;
     Thread thread = new Thread(() -> {
+      boolean hasNextMove = true;
       while(!stop) {
         try {
           Thread.sleep(velocity);
-          ball.advance(rows, cols);
+          hasNextMove = ball.advance(rows, cols);
+          if(!hasNextMove) {
+            stop = true;
+          }
         } catch (InterruptedException e) {
           e.printStackTrace();
         }

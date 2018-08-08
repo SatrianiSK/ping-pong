@@ -45,13 +45,22 @@ public final class BoardConsolePrinter implements Runnable {
       
       // Clear the board
       for(int i = 0; i < charBoard.length; i++) {
-        Arrays.fill(charBoard[i], '\0');
+        Arrays.fill(charBoard[i], ' ');
       }
       
       // Get position of the ball
       int ballRow = ball.getRow();
       int ballCol = ball.getCol();
       charBoard[ballRow][ballCol] = 'O';
+      
+      // If the ball has already touched the limit the game is over
+      if(ballCol == 0) {
+        charBoard[ballRow][2] = 'E';
+        charBoard[ballRow][3] = 'N';
+        charBoard[ballRow][4] = 'D';
+        charBoard[ballRow][5] = '!';
+        stop = true;
+      }
       
       // Get position of the stick
       int leftStickRow = leftStick.getRow();

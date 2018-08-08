@@ -14,10 +14,10 @@ public final class PingPong {
   private static final int VELOCITY = 200;
   
   /** Row size of the board. */
-  private static final int ROW_NUMBER = 8;
+  private static final int ROW_NUMBER = 8; // The minimum size is determined by the size of the stick and the initial position of it and the ball
   
   /** Column size of the board. */
-  private static final int COL_NUMBER = 14;
+  private static final int COL_NUMBER = 14; // Minimum size should be of 6 in order to show the END legend
   
   
   public static void main(String[] args) {
