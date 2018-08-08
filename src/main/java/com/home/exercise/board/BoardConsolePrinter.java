@@ -2,6 +2,9 @@ package com.home.exercise.board;
 
 import java.util.Arrays;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.home.exercise.board.elements.Ball;
 import com.home.exercise.board.elements.Stick;
 
@@ -10,6 +13,9 @@ import com.home.exercise.board.elements.Stick;
  * @author rodrigo.mendoza
  */
 public final class BoardConsolePrinter implements Runnable {
+  /** Logging reference */
+  private final static Logger LOG = LogManager.getLogger(BoardConsolePrinter.class);
+  
   private final Ball ball;
   private final Stick leftStick;
   private final int rows;
@@ -72,6 +78,7 @@ public final class BoardConsolePrinter implements Runnable {
       
       // Get the board in a String representation
       StringBuilder builder = new StringBuilder();
+      builder.append("\n");
       for(int j = 0; j < charBoard[0].length; j++) {
         builder.append("---");
       }
@@ -88,7 +95,7 @@ public final class BoardConsolePrinter implements Runnable {
       builder.append("\n");
       
       // Print the board into the console
-      System.out.println(builder.toString());
+      LOG.info(builder.toString());
       
     }
   }
