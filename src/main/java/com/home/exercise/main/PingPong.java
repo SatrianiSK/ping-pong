@@ -1,7 +1,16 @@
 package com.home.exercise.main;
 
 import java.util.Scanner;
+import java.util.concurrent.Executors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.home.exercise.board.Board;
 import com.home.exercise.board.BoardConsolePrinter;
 
@@ -10,6 +19,9 @@ import com.home.exercise.board.BoardConsolePrinter;
  * @author rodrigo.mendoza
  */
 public final class PingPong {
+  /** Reference to the application logger. */
+  private static final Logger LOG = LogManager.getLogger(PingPong.class);
+  
   /** Velocity in miliseconds of the refresh of the console and the animation of the ball. */
   private static final int VELOCITY = 200;
   
@@ -19,6 +31,9 @@ public final class PingPong {
   /** Column size of the board. */
   private static final int COL_NUMBER = 14; // Minimum size should be of 6 in order to show the END legend
   
+  /** Thread pool to execute Callables. */
+  private static final ListeningExecutorService threadPool =
+      MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
   
   public static void main(String[] args) {
     // Creation of the board with default values
@@ -26,7 +41,17 @@ public final class PingPong {
     
     // Init and execute the boardPrinter
     BoardConsolePrinter boardPrinter = new BoardConsolePrinter(board, PingPong.VELOCITY);
-    new Thread(boardPrinter).start();
+    ListenableFuture<Void> boardPrinterFuture = threadPool.submit(boardPrinter);
+    Futures.addCallback(boardPrinterFuture, new FutureCallback<Void>() {
+      @Override
+      public void onSuccess(Void result) {
+        LOG.info("Game over: Press \"Q\" to stop the game: ");
+      }
+      @Override
+      public void onFailure(Throwable t) {
+        t.printStackTrace();
+      }
+    }, threadPool);
     
     // Init the ping pong game
     board.init();
@@ -47,6 +72,7 @@ public final class PingPong {
         boardPrinter.stop();
         continueLoop = false;
         scanner.close();
+        threadPool.shutdown();
       }
     } while(continueLoop);
     

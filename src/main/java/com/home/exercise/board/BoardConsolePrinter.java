@@ -1,6 +1,7 @@
 package com.home.exercise.board;
 
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +13,7 @@ import com.home.exercise.board.elements.Stick;
  * Prints the current state of the board on the console.
  * @author rodrigo.mendoza
  */
-public final class BoardConsolePrinter implements Runnable {
+public final class BoardConsolePrinter implements Callable<Void> {
   /** Logging reference */
   private final static Logger LOG = LogManager.getLogger(BoardConsolePrinter.class);
   
@@ -40,7 +41,7 @@ public final class BoardConsolePrinter implements Runnable {
   }
   
   @Override
-  public void run() {
+  public Void call() throws Exception {
     stop = false;
     while(!stop) {
       try {
@@ -96,8 +97,8 @@ public final class BoardConsolePrinter implements Runnable {
       
       // Print the board into the console
       LOG.info(builder.toString());
-      
     }
+    return null;
   }
   
 }
